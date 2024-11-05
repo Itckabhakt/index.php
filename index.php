@@ -11,20 +11,21 @@ if ($source === 'astro') {
     exit;
 }
 
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $mpdUrl);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
-]);
+$mpdheads = [
+  'http' => [
+      'header' => "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36\r\n",
+      'follow_location' => 1,
+      'timeout' => 5
+  ]
+];
+$context = stream_context_create($mpdheads);
 
-$res = curl_exec($ch);
-if (curl_errno($ch)) {
-    echo 'Error: ' . curl_error($ch);
+// Attempt to fetch the MPD content
+$res = file_get_contents($mpdUrl, false, $context);
+
+if ($res === FALSE) {
+    echo 'Error: Unable to retrieve content.';
 } else {
     echo $res;
 }
-curl_close($ch);
 ?>
