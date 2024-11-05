@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "index.php",
+      "use": "vercel-php"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/astro/(.*)",
+      "dest": "/index.php?source=astro&get=$1"
+    },
+    {
+      "src": "/sky/(.*)",
+      "dest": "/index.php?source=sky&get=$1"
+    }
+  ],
+  "regions": ["sin1"]
+}
